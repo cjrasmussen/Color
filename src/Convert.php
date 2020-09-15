@@ -3,7 +3,7 @@ namespace cjrasmussen\Color;
 
 use stdClass;
 
-class Color
+class Convert
 {
 	/**
 	 * Convert a hexidecimal color to RGB
@@ -11,7 +11,7 @@ class Color
 	 * @param string $hex
 	 * @return stdClass
 	 */
-	public static function convertHexToRgb($hex): stdClass
+	public static function hexToRgb($hex): stdClass
 	{
 		if (strlen($hex) <= 3) {
 			$hex = $hex{0} . $hex{0} . $hex{1} . $hex{1} . $hex{2} . $hex{2};
@@ -31,7 +31,7 @@ class Color
 	 * @param int|null $b
 	 * @return string
 	 */
-	public static function convertRgbToHex($mixed, $g = null, $b = null): string
+	public static function rgbToHex($mixed, $g = null, $b = null): string
 	{
 		if ($mixed instanceof stdClass) {
 			$r = $mixed->R;
@@ -54,7 +54,7 @@ class Color
 	 * @param int|null $b
 	 * @return string
 	 */
-	public static function convertRgbToHsl($mixed, $g = null, $b = null): stdClass
+	public static function rgbToHsl($mixed, $g = null, $b = null): stdClass
 	{
 		if ($mixed instanceof stdClass) {
 			$r = $mixed->R;
@@ -106,7 +106,7 @@ class Color
 	 * @param float|null $l
 	 * @return stdClass
 	 */
-	public static function convertHslToRgb($mixed, $s = null, $l = null): stdClass
+	public static function hslToRgb($mixed, $s = null, $l = null): stdClass
 	{
 		if ($mixed instanceof stdClass) {
 			$h = $mixed->H;
@@ -164,88 +164,25 @@ class Color
 	}
 
 	/**
-	 * Determine if two colors contrast each other
-	 *
-	 * @param stdClass|string $color1
-	 * @param stdClass|string $color2
-	 * @param int $threshold
-	 * @return bool
-	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
-	 */
-	public static function doColorsContrast($color1, $color2, $threshold = 4): bool
-	{
-		$lum1 = self::calculateRgbLuminance(self::convertInputToRgb($color1));
-		$lum2 = self::calculateRgbLuminance(self::convertInputToRgb($color2));
-
-		$bright = max($lum1, $lum2);
-		$dark = min($lum1, $lum2);
-
-		$contrast = (($bright + 0.05) / ($dark + 0.05));
-
-		return ($contrast > $threshold);
-	}
-
-	/**
-	 * Calculate the luminance of an RGB color
-	 *
-	 * @param stdClass $color
-	 * @return float
-	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
-	 */
-	public static function calculateRgbLuminance($color): float
-	{
-		$luminance = static function ($v) {
-			$v /= 255;
-			return ($v < 0.03928) ? ($v / 12.92) : ((($v + 0.055) / 1.055) ** 2.4);
-		};
-
-		return (($luminance($color->R) * 0.2126) + ($luminance($color->G) * 0.7152) + ($luminance($color->B) * 0.0722));
-	}
-
-	/**
 	 * Accepts a hexidecimal string or HSL class and convers it to an RGB class
 	 *
 	 * @param stdClass|string $mixed
 	 * @return stdClass|null
 	 */
-	private static function convertInputToRgb($mixed): ?stdClass
+	public static function inputToRgb($mixed): ?stdClass
 	{
 		if ($mixed instanceof stdClass) {
 			if ($mixed->H) {
-				$mixed = self::convertHslToRgb($mixed);
+				$mixed = self::hslToRgb($mixed);
 			}
 
 			if (isset($mixed->R)) {
 				return $mixed;
 			}
 		} else {
-			return self::convertHexToRgb($mixed);
+			return self::hexToRgb($mixed);
 		}
 
 		return null;
-	}
-
-	/**
-	 * Determine if a string is a hexidecimal color
-	 *
-	 * @param string $string
-	 * @return bool
-	 */
-	public static function isHexColor($string): bool
-	{
-		$length = strlen($string);
-		return ((($length === 3) OR ($length === 6)) AND (ctype_xdigit($string)));
-	}
-
-	/**
-	 * Remove extraneous characters from a string to make it a "clean" hexidecimal color
-	 *
-	 * @param string $string
-	 * @return string
-	 */
-	public static function cleanHexColor($string): string
-	{
-		$string = trim($string, ' #;');
-		return (self::isHexColor($string)) ? $string : '';
 	}
 }
