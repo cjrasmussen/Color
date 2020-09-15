@@ -6,9 +6,10 @@ Simple functions for color conversion and analysis.
 ## Usage
 
 ```php
-use cjrasmussen\Color;
+use cjrasmussen\Color\Convert;
+use cjrasmussen\Color\General;
 
-$hex = Color::convertRgbToHex(153, 51, 51);
+$hex = Convert::rgbToHex(153, 51, 51);
 echo $hex; // 993333
 
 $rgb = (object)[
@@ -16,8 +17,11 @@ $rgb = (object)[
 	'G' => 51,
 	'B' => 51,
 ];
-$hex = Color::convertRgbToHex($rgb);
+$hex = Convert::rgbToHex($rgb);
 echo $hex; // 993333
+
+$is_hex = General::isHexColor('993333');
+echo $is_hex; // true
 ```
 
 ## Installation
