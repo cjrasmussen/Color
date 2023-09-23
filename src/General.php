@@ -12,9 +12,22 @@ class General
 	 * @param stdClass|string $color2
 	 * @param int $threshold
 	 * @return bool
-	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
 	 */
 	public static function doColorsContrast($color1, $color2, $threshold = 4): bool
+	{
+		$contrast = self::calculateColorContrast($color1, $color2);
+		return ($contrast > $threshold);
+	}
+
+	/**
+	 * Calculate the amount of contrast between two colors
+	 *
+	 * @param stdClass|string $color1
+	 * @param stdClass|string $color2
+	 * @return float
+	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
+	 */
+	public static function calculateColorContrast($color1, $color2): float
 	{
 		$lum1 = self::calculateRgbLuminance(Convert::inputToRgb($color1));
 		$lum2 = self::calculateRgbLuminance(Convert::inputToRgb($color2));
@@ -22,9 +35,7 @@ class General
 		$bright = max($lum1, $lum2);
 		$dark = min($lum1, $lum2);
 
-		$contrast = (($bright + 0.05) / ($dark + 0.05));
-
-		return ($contrast > $threshold);
+		return (($bright + 0.05) / ($dark + 0.05));
 	}
 
 	/**
