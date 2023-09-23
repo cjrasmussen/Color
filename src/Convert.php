@@ -6,12 +6,12 @@ use stdClass;
 class Convert
 {
 	/**
-	 * Convert a hexidecimal color to RGB
+	 * Convert a hexadecimal color to RGB
 	 *
 	 * @param string $hex
 	 * @return stdClass
 	 */
-	public static function hexToRgb($hex): stdClass
+	public static function hexToRgb(string $hex): stdClass
 	{
 		if (strlen($hex) <= 3) {
 			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
@@ -22,7 +22,7 @@ class Convert
 	}
 
 	/**
-	 * Convert RGB color to hexidecimal
+	 * Convert RGB color to hexadecimal
 	 *
 	 * First parameter can be the value of red or an object representing all three attributes
 	 *
@@ -31,7 +31,7 @@ class Convert
 	 * @param int|null $b
 	 * @return string
 	 */
-	public static function rgbToHex($mixed, $g = null, $b = null): string
+	public static function rgbToHex($mixed, ?int $g = null, ?int $b = null): string
 	{
 		if ($mixed instanceof stdClass) {
 			$r = $mixed->R;
@@ -54,7 +54,7 @@ class Convert
 	 * @param int|null $b
 	 * @return string
 	 */
-	public static function rgbToHsl($mixed, $g = null, $b = null): stdClass
+	public static function rgbToHsl($mixed, ?int $g = null, ?int $b = null): stdClass
 	{
 		if ($mixed instanceof stdClass) {
 			$r = $mixed->R;
@@ -106,7 +106,7 @@ class Convert
 	 * @param float|null $l
 	 * @return stdClass
 	 */
-	public static function hslToRgb($mixed, $s = null, $l = null): stdClass
+	public static function hslToRgb($mixed, ?float $s = null, ?float $l = null): stdClass
 	{
 		if ($mixed instanceof stdClass) {
 			$h = $mixed->H;
@@ -164,7 +164,7 @@ class Convert
 	}
 
 	/**
-	 * Accepts a hexidecimal string or HSL class and convers it to an RGB class
+	 * Accepts a hexadecimal string or HSL class and converts it to an RGB class
 	 *
 	 * @param stdClass|string $mixed
 	 * @return stdClass|null

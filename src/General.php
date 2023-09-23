@@ -13,7 +13,7 @@ class General
 	 * @param int $threshold
 	 * @return bool
 	 */
-	public static function doColorsContrast($color1, $color2, $threshold = 4): bool
+	public static function doColorsContrast($color1, $color2, int $threshold = 4): bool
 	{
 		$contrast = self::calculateColorContrast($color1, $color2);
 		return ($contrast > $threshold);
@@ -41,11 +41,11 @@ class General
 	/**
 	 * Calculate the luminance of an RGB color
 	 *
-	 * @param stdClass $color
+	 * @param object $color
 	 * @return float
 	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
 	 */
-	public static function calculateRgbLuminance($color): float
+	public static function calculateRgbLuminance(object $color): float
 	{
 		$luminance = static function ($v) {
 			$v /= 255;
@@ -56,24 +56,24 @@ class General
 	}
 
 	/**
-	 * Determine if a string is a hexidecimal color
+	 * Determine if a string is a hexadecimal color
 	 *
 	 * @param string $string
 	 * @return bool
 	 */
-	public static function isHexColor($string): bool
+	public static function isHexColor(string $string): bool
 	{
 		$length = strlen($string);
 		return ((($length === 3) OR ($length === 6)) AND (ctype_xdigit($string)));
 	}
 
 	/**
-	 * Remove extraneous characters from a string to make it a "clean" hexidecimal color
+	 * Remove extraneous characters from a string to make it a "clean" hexadecimal color
 	 *
 	 * @param string $string
 	 * @return string
 	 */
-	public static function cleanHexColor($string): string
+	public static function cleanHexColor(string $string): string
 	{
 		$string = trim($string, ' #;');
 		return (self::isHexColor($string)) ? $string : '';
