@@ -72,23 +72,25 @@ class Convert
 
 		$l = ($max + $min) / 2;
 
+		$diff = $max - $min;
+
 		if ($max === $min) {
 			$h = $s = 0;
 		} else {
 			if ($b === $max) {
-				$h = 4 + (($r - $g) / ($max - $min));
+				$h = 4 + (($r - $g) / $diff);
 			} elseif ($g === $max) {
-				$h = 2 + (($b - $r) / ($max - $min));
+				$h = 2 + (($b - $r) / $diff);
 			} else {
-				$h = (($g - $b) / ($max - $min));
+				$h = (($g - $b) / $diff);
 			}
 
 			$h *= 60;
 
 			if ($l < .5) {
-				$s = (($max - $min) / ($max + $min));
+				$s = ($diff / ($max + $min));
 			} else {
-				$s = (($max - $min) / (2 - $max - $min));
+				$s = ($diff / (2 - $diff));
 			}
 		}
 
