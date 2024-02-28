@@ -1,15 +1,14 @@
 <?php
-namespace cjrasmussen\Color;
 
-use stdClass;
+namespace cjrasmussen\Color;
 
 class General
 {
 	/**
 	 * Determine if two colors contrast each other
 	 *
-	 * @param stdClass|string $color1
-	 * @param stdClass|string $color2
+	 * @param object|string $color1
+	 * @param object|string $color2
 	 * @param int $threshold
 	 * @return bool
 	 */
@@ -22,8 +21,8 @@ class General
 	/**
 	 * Calculate the amount of contrast between two colors
 	 *
-	 * @param stdClass|string $color1
-	 * @param stdClass|string $color2
+	 * @param object|string $color1
+	 * @param object|string $color2
 	 * @return float
 	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
 	 */

@@ -1,7 +1,6 @@
 <?php
-namespace cjrasmussen\Color;
 
-use stdClass;
+namespace cjrasmussen\Color;
 
 class Convert
 {
@@ -9,9 +8,9 @@ class Convert
 	 * Convert a hexadecimal color to RGB
 	 *
 	 * @param string $hex
-	 * @return stdClass
+	 * @return object
 	 */
-	public static function hexToRgb(string $hex): stdClass
+	public static function hexToRgb(string $hex): object
 	{
 		if (strlen($hex) <= 3) {
 			$hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
@@ -26,14 +25,14 @@ class Convert
 	 *
 	 * First parameter can be the value of red or an object representing all three attributes
 	 *
-	 * @param int|stdClass $mixed
+	 * @param int|object $mixed
 	 * @param int|null $g
 	 * @param int|null $b
 	 * @return string
 	 */
 	public static function rgbToHex($mixed, ?int $g = null, ?int $b = null): string
 	{
-		if ($mixed instanceof stdClass) {
+		if (is_object($mixed)) {
 			$r = $mixed->R;
 			$g = $mixed->G;
 			$b = $mixed->B;
@@ -49,14 +48,14 @@ class Convert
 	 *
 	 * First parameter can be the value of red or an object representing all three attributes
 	 *
-	 * @param int|stdClass $mixed
+	 * @param int|object $mixed
 	 * @param int|null $g
 	 * @param int|null $b
-	 * @return string
+	 * @return object
 	 */
-	public static function rgbToHsl($mixed, ?int $g = null, ?int $b = null): stdClass
+	public static function rgbToHsl($mixed, ?int $g = null, ?int $b = null): object
 	{
-		if ($mixed instanceof stdClass) {
+		if (is_object($mixed)) {
 			$r = $mixed->R;
 			$g = $mixed->G;
 			$b = $mixed->B;
@@ -101,14 +100,14 @@ class Convert
 	 *
 	 * First parameter can be the value of hue or an object representing all three attributes
 	 *
-	 * @param int|stdClass $mixed
+	 * @param int|object $mixed
 	 * @param float|null $s
 	 * @param float|null $l
-	 * @return stdClass
+	 * @return object
 	 */
-	public static function hslToRgb($mixed, ?float $s = null, ?float $l = null): stdClass
+	public static function hslToRgb($mixed, ?float $s = null, ?float $l = null): object
 	{
-		if ($mixed instanceof stdClass) {
+		if (is_object($mixed)) {
 			$h = $mixed->H;
 			$s = $mixed->S;
 			$l = $mixed->L;
@@ -166,13 +165,13 @@ class Convert
 	/**
 	 * Accepts a hexadecimal string or HSL class and converts it to an RGB class
 	 *
-	 * @param stdClass|string $mixed
-	 * @return stdClass|null
+	 * @param object|string $mixed
+	 * @return object|null
 	 */
-	public static function inputToRgb($mixed): ?stdClass
+	public static function inputToRgb($mixed): ?object
 	{
-		if ($mixed instanceof stdClass) {
-			if ($mixed->H) {
+		if (is_object($mixed)) {
+			if (isset($mixed->H)) {
 				$mixed = self::hslToRgb($mixed);
 			}
 
