@@ -165,6 +165,122 @@ class Convert
 	}
 
 	/**
+	 * Convert RGB color to HSV
+	 *
+	 * First parameter can be the value of red or an object representing all three attributes
+	 *
+	 * @param int|object $mixed
+	 * @param int|null $g
+	 * @param int|null $b
+	 * @return object
+	 */
+	public static function rgbToHsv($mixed, ?int $g = null, ?int $b = null): object
+	{
+		if (is_object($mixed)) {
+			$r = $mixed->R;
+			$g = $mixed->G;
+			$b = $mixed->B;
+		} else {
+			$r = (int)$mixed;
+		}
+
+		$r /= 255;
+		$g /= 255;
+		$b /= 255;
+
+		$max = max($r, $g, $b);
+		$min = min($r, $g, $b);
+
+		$diff = $max - $min;
+
+		if ($diff === 0) {
+			$h = 0;
+		} elseif ($max === $r) {
+			$h = (($g - $b) / $diff) % 6;
+		} elseif ($max === $g) {
+			$h = (($b - $r) / $diff) + 2;
+		} else {
+			$h = (($r - $g) / $diff) + 4;
+		}
+
+		$h *= 60;
+		if ($h < 0) {
+			$h += 360;
+		}
+
+		$v = $max;
+
+		if ($v === 0) {
+			$s = 0;
+		} else {
+			$s = $diff / $v;
+		}
+
+		$s *= 100;
+		$v *= 100;
+
+		return (object)['H' => (int)round($h), 'S' => $s, 'V' => $v];
+	}
+
+	/**
+	 * Convert HSV color to RGB
+	 *
+	 * First parameter can be the value of hue or an object representing all three attributes
+	 *
+	 * @param int|object $mixed
+	 * @param float|null $s
+	 * @param float|null $v
+	 * @return object
+	 */
+	public static function hsvToRgb($mixed, ?float $s = null, ?float $v = null): object
+	{
+		if (is_object($mixed)) {
+			$h = $mixed->H;
+			$s = $mixed->S;
+			$v = $mixed->V;
+		} else {
+			$h = (int)$mixed;
+		}
+
+		$s /= 100;
+		$v /= 100;
+
+		$t1 = $v * $s;
+		$t2 = $h / 60;
+		$t3 = $t1 * (1 - abs(($t2 % 2) - 1));
+
+		$r = $b = $g = 0;
+
+		if (($t2 >= 0) && ($t2 < 1)) {
+			$r = $t1;
+			$g = $t3;
+		} elseif (($t2 >= 1) && ($t2 < 2)) {
+			$r = $t3;
+			$g = $t1;
+		} elseif (($t2 >= 2) && ($t2 < 3)) {
+			$g = $t1;
+			$b = $t3;
+		} elseif (($t2 >= 3) && ($t2 < 4)) {
+			$g = $t3;
+			$b = $t1;
+		} elseif (($t2 >= 4) && ($t2 < 5)) {
+			$r = $t1;
+			$b = $t3;
+		} else {
+			$r = $t3;
+			$b = $t1;
+		}
+
+		$t = $v - $t1;
+
+		$r = (int)round(($r + $t) * 255);
+		$g = (int)round(($g + $t) * 255);
+		$b = (int)round(($b + $t) * 255);
+
+		return (object)['R' => $r, 'G' => $g, 'B' => $b];
+	}
+
+	/**
 	 * Accepts a hexadecimal string or HSL class and converts it to an RGB class
 	 *
 	 * @param object|string $mixed
