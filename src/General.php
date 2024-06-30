@@ -2,6 +2,12 @@
 
 namespace cjrasmussen\Color;
 
+use cjrasmussen\Color\ColorType\Hex;
+use cjrasmussen\Color\ColorType\Hsl;
+use cjrasmussen\Color\ColorType\Hsv;
+use cjrasmussen\Color\ColorType\Rgb;
+use InvalidArgumentException;
+
 class General
 {
 	/**
@@ -21,37 +27,44 @@ class General
 	/**
 	 * Calculate the amount of contrast between two colors
 	 *
-	 * @param object|string $color1
-	 * @param object|string $color2
+	 * @param Rgb|Hex|Hsl|Hsv|string $color1
+	 * @param Rgb|Hex|Hsl|Hsv|string $color2
 	 * @return float
 	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
 	 */
 	public static function calculateColorContrast($color1, $color2): float
 	{
-		$lum1 = self::calculateRgbLuminance(Convert::inputToRgb($color1));
-		$lum2 = self::calculateRgbLuminance(Convert::inputToRgb($color2));
+		if (is_string($color1)) {
+			$color1 = new Hex($color1);
+		}
+
+		if (is_string($color2)) {
+			$color2 = new Hex($color2);
+		}
+
+		if (($color1 instanceof Hex) || ($color1 instanceof Hsl) || ($color1 instanceof Hsv)) {
+			$rgb1 = $color1->toRgb();
+		} elseif ($color1 instanceof Rgb) {
+			$rgb1 = $color1;
+		} else {
+			throw new InvalidArgumentException();
+		}
+
+		if (($color2 instanceof Hex) || ($color2 instanceof Hsl) || ($color2 instanceof Hsv)) {
+			$rgb2 = $color2->toRgb();
+		} elseif ($color2 instanceof Rgb) {
+			$rgb2 = $color2;
+		} else {
+			throw new InvalidArgumentException();
+		}
+
+		$lum1 = $rgb1->getLuminance();
+		$lum2 = $rgb2->getLuminance();
 
 		$bright = max($lum1, $lum2);
 		$dark = min($lum1, $lum2);
 
 		return (($bright + 0.05) / ($dark + 0.05));
-	}
-
-	/**
-	 * Calculate the luminance of an RGB color
-	 *
-	 * @param object $color
-	 * @return float
-	 * @see https://stackoverflow.com/questions/9733288/how-to-programmatically-calculate-the-contrast-ratio-between-two-colors
-	 */
-	public static function calculateRgbLuminance(object $color): float
-	{
-		$luminance = static function ($v) {
-			$v /= 255;
-			return ($v < 0.03928) ? ($v / 12.92) : ((($v + 0.055) / 1.055) ** 2.4);
-		};
-
-		return (($luminance($color->R) * 0.2126) + ($luminance($color->G) * 0.7152) + ($luminance($color->B) * 0.0722));
 	}
 
 	/**
